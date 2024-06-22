@@ -95,6 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJs("
     $(function() {
+        // Abre o modal de criação de tarefa
         $('#modalButton').click(function() {
             $('#modal').modal('show')
                 .find('#modalContent')
@@ -102,6 +103,7 @@ $this->registerJs("
             $('#modalTitle').text('Create Task');
         });
 
+        // Abre o modal de atualização de tarefa
         $('.task-index').on('click', '.update-button', function() {
             $('#modal').modal('show')
                 .find('#modalContent')
@@ -109,6 +111,7 @@ $this->registerJs("
             $('#modalTitle').text('Update Task');
         });
 
+        // Função para eliminar uma tarefa
         $('.task-index').on('click', '.delete-button', function() {
             if (confirm('Are you sure you want to delete this item?')) {
                 $.post($(this).attr('value'), function(data) {

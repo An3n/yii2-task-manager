@@ -43,6 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerJs("
+    // Função para submeter o formulário da tarefa
     function submitTaskForm(form) {
         $.post(
             $(form).attr('action'),

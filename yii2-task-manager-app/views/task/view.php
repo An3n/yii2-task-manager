@@ -35,9 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'completed_at',
                 'format' => ['date', 'php:d/m/Y'],
-                'value' => function ($model) {
-                    return $model->completed_at ? Yii::$app->formatter->asDate($model->completed_at, 'php:Y-m-d') : '';
-                },
             ],
             'status',
         ],
@@ -47,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php
 $this->registerJs("
+    // Função para eliminar uma tarefa
     $('#deleteButton').click(function() {
         if (confirm('Are you sure you want to delete this item?')) {
             $.ajax({

@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * This is the model class for table "user".
+ * Este é o modelo de classe para a tabela "user".
  *
  * @property int $id
  * @property string $username
@@ -20,17 +20,13 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    // Define o nome da tabela associada a este modelo.
     public static function tableName()
     {
         return 'user';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    // Define as regras de validação para os atributos do modelo.
     public function rules()
     {
         return [
@@ -43,9 +39,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+   // Define os nomes dos atributos para os campos do formulário.
     public function attributeLabels()
     {
         return [
@@ -59,6 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    // Implementações de métodos da interface IdentityInterface
     public static function findIdentity($id)
     {
         return static::findOne($id);
@@ -94,11 +89,13 @@ class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    // Define a pass do utilizador, gerando um hash da pass fornecida.
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
+    // Gera uma chave de autenticação para o utilizador.
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();

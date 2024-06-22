@@ -11,11 +11,16 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\SignupForm;
 
+
+/**
+ * SiteController implementa as ações padrão do site como login, logout, etc.
+ */
 class SiteController extends Controller
 {
     /**
      * {@inheritdoc}
      */
+    // Define os comportamentos do controlador
     public function behaviors()
     {
         return [
@@ -27,6 +32,11 @@ class SiteController extends Controller
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['login', 'signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
                     ],
                 ],
             ],
@@ -42,6 +52,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
+    // Define ações padrão para erros e CAPTCHA.
     public function actions()
     {
         return [
@@ -56,8 +67,20 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
+     * {@inheritdoc}
+     */
+    // Verifica se o utilizador está autenticado antes de executar qualquer ação.
+    public function beforeAction($action)
+    {
+        if (!Yii::$app->user->isGuest || $action->id === 'login' || $action->id === 'signup') {
+            return parent::beforeAction($action);
+        } else {
+            return $this->redirect(['site/login']);
+        }
+    }
+
+    /**
+     * Exibe a página inicial.
      * @return string
      */
     public function actionIndex()
@@ -66,42 +89,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    /* public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    } */
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    /* public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    } */
-
-    /**
-     * Displays contact page.
-     *
+     * Exibe o formulário de contacto.
      * @return Response|string
      */
     public function actionContact()
@@ -118,8 +106,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays about page.
-     *
+     * Exibe a página "About".
      * @return string
      */
     public function actionAbout()
@@ -127,6 +114,7 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
+    // Ação para signup de utilizador.
     public function actionSignup()
     {
         $model = new SignupForm();
@@ -139,6 +127,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Ação para login de utilizador.
+     * @return Response|string
+     */
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -155,6 +147,10 @@ class SiteController extends Controller
         ]);
     }
 
+    /**
+     * Ação para logout de utilizador.
+     * @return Response
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();

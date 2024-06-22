@@ -6,41 +6,42 @@ use Yii;
 use yii\base\Model;
 
 /**
- * LoginForm is the model behind the login form.
+ * LoginForm é o modelo por trás do formulário de login.
  *
  * @property-read User|null $user
  *
  */
 class LoginForm extends Model
 {
-    public $username;
-    public $password;
-    public $rememberMe = true;
+    public $username; // Armazena o nome de utilizador inserido
+    public $password; // Armazena a pass inserida
+    public $rememberMe = true; // Armazena o valor de rememberMe
 
-    private $_user = false;
+    private $_user = false; // Armazena a instância de utilizador
 
 
     /**
      * @return array the validation rules.
      */
+    // Define as regras de validação para o formulário de login.
     public function rules()
     {
         return [
-            // username and password are both required
+            // Nome de utilizador e pass são obrigatórios
             [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
+            // rememberMe deve ser um valor booleano
             ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
+            // a pass é validada validatePassword()
             ['password', 'validatePassword'],
         ];
     }
 
     /**
-     * Validates the password.
-     * This method serves as the inline validation for password.
+     * Valida a pass.
+     * Este método serve como validador inline para a pass.
      *
-     * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * @param string $attribute o atributo atualmente a ser validado
+     * @param array $params os pares de nome-valor adicionais dados na regra
      */
     public function validatePassword($attribute, $params)
     {
@@ -54,8 +55,9 @@ class LoginForm extends Model
     }
 
     /**
-     * Logs in a user using the provided username and password.
-     * @return bool whether the user is logged in successfully
+     * Faz o login do utilizador usando o nome de utilizador e a pass fornecidos.
+     *
+     * @return bool se o utilizador fez login com sucesso
      */
     public function login()
     {
@@ -66,7 +68,7 @@ class LoginForm extends Model
     }
 
     /**
-     * Finds user by [[username]]
+     * Encontra o utilizador pelo nome de utilizador.
      *
      * @return User|null
      */
