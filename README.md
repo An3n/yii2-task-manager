@@ -55,7 +55,10 @@ php yii migrate
 
 ## Uso
 ### Aceder à aplicação
-Abra o navegador e aceda a `http://localhost` para aceder à aplicação.
+Inicie a aplicação e abra o navegador e aceda a `http://localhost` para aceder à aplicação:
+```bash
+php yii serve
+```
 
 ### Registo e Login
 Registre-se como um novo utilizador.
