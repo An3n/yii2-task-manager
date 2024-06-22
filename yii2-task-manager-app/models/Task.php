@@ -5,41 +5,40 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "task".
+ * Este é o modelo de classe para a tabela "task".
  *
  * @property int $id
  * @property string $title
- * @property string|null $description
+ * @property string $description
+ * @property string $status
  * @property string|null $created_at
  * @property string|null $completed_at
- * @property string $status
+ * @property int $user_id
  */
+
+
 class Task extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+    // Define o nome da tabela associada a este modelo.
     public static function tableName()
     {
         return 'task';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+     // Define as regras de validação para os atributos do modelo.
     public function rules()
     {
         return [
             [['title'], 'required'],
             [['description'], 'string'],
             [['created_at', 'completed_at'], 'safe'],
-            [['title', 'status'], 'string', 'max' => 255],
+            [['title'], 'string', 'max' => 255],
+            [['status'], 'string', 'max' => 20],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    // Define os nomes dos atributos para os campos do formulário.
     public function attributeLabels()
     {
         return [
@@ -49,19 +48,33 @@ class Task extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'completed_at' => 'Completed At',
             'status' => 'Status',
+            'user_id' => 'User ID',
         ];
     }
 
+    /**
+     * Executa ações antes de guardar o modelo.
+     * @param bool $insert
+     * @return bool
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
             if ($this->status === 'completed' && empty($this->completed_at)) {
                 $this->completed_at = date('Y-m-d H:i:s');
             } elseif ($this->status !== 'completed') {
-                $this->completed_at = null; // Clear completed_at if status is not completed
+                $this->completed_at = null; // Limpa completed_at se o status não for completed
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Define a relação entre Task e User.
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

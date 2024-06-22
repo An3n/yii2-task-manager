@@ -7,7 +7,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Task;
 
 /**
- * TaskSearch represents the model behind the search form of `app\models\Task`.
+ * TaskSearch representa o modelo para a forma de pesquisa `app\models\Task`.
  */
 class TaskSearch extends Task
 {
@@ -17,8 +17,8 @@ class TaskSearch extends Task
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['title', 'description', 'created_at', 'completed_at', 'status'], 'safe'],
+            [['id', 'user_id'], 'integer'],
+            [['title', 'description', 'status', 'created_at', 'completed_at'], 'safe'],
         ];
     }
 
@@ -27,12 +27,12 @@ class TaskSearch extends Task
      */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
+        // Ignora a implementação de scenarios() na classe pai
         return Model::scenarios();
     }
 
     /**
-     * Creates data provider instance with search query applied
+     * Cria uma instância de provedor de dados com consulta de pesquisa aplicada
      *
      * @param array $params
      *
@@ -42,7 +42,8 @@ class TaskSearch extends Task
     {
         $query = Task::find();
 
-        // add conditions that should always apply here
+        // Adiciona condições que sempre devem ser aplicadas aqui
+        $query->andWhere(['user_id' => \Yii::$app->user->id]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -51,16 +52,17 @@ class TaskSearch extends Task
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
+            // Descomente a linha seguinte se você não quiser retornar nenhum registro quando a validação falhar
             // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // Condições de filtro de grade
         $query->andFilterWhere([
             'id' => $this->id,
             'created_at' => $this->created_at,
             'completed_at' => $this->completed_at,
+            'user_id' => $this->user_id,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
